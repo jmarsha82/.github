@@ -6,18 +6,21 @@ param(
     [string[]] $Repositories = @(),
 
     [Parameter(Mandatory = $false)]
+    [string] $Token = $env:GITHUB_TOKEN,
+
+    [Parameter(Mandatory = $false)]
     [string] $RulesetPath = "$PSScriptRoot\..\rulesets\require-pr-review.json"
 )
 
 $ErrorActionPreference = "Stop"
 
-if (-not $env:GITHUB_TOKEN) {
-    throw "Set GITHUB_TOKEN to a token with repository Administration: write permission."
+if (-not $Token) {
+    throw "Pass -Token or set GITHUB_TOKEN to a token with repository Administration: write permission."
 }
 
 $headers = @{
     Accept = "application/vnd.github+json"
-    Authorization = "Bearer $env:GITHUB_TOKEN"
+    Authorization = "Bearer $Token"
     "X-GitHub-Api-Version" = "2022-11-28"
 }
 
